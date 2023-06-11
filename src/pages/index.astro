@@ -1,81 +1,89 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
+import { Image } from 'astro:assets';
+import background_low from '../assets/images_compressed/background_low.jpg';
+import logo from '../assets/images_compressed/logo.png';
+import icon from '../assets/images_compressed/icon.png';
+import cover from '../assets/images_compressed/cover_blur.png';
+import summer from '../assets/images_compressed/summer.png';
+import sound from '../assets/images_compressed/sound.png';
+import no_sound from '../assets/images_compressed/no_sound.png';
 ---
 
-<Layout title="Welcome to Astro.">
-	<main>
-		<h1>Welcome to <span class="text-gradient">Astro</span></h1>
-		<p class="instructions">
-			To get started, open the directory <code>src/pages</code> in your project.<br />
-			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
-		</p>
-		<ul role="list" class="link-card-grid">
-			<Card
-				href="https://docs.astro.build/"
-				title="Documentation"
-				body="Learn how Astro works and explore the official API docs."
-			/>
-			<Card
-				href="https://astro.build/integrations/"
-				title="Integrations"
-				body="Supercharge your project with new frameworks and libraries."
-			/>
-			<Card
-				href="https://astro.build/themes/"
-				title="Themes"
-				body="Explore a galaxy of community-built starter themes."
-			/>
-			<Card
-				href="https://astro.build/chat/"
-				title="Community"
-				body="Come say hi to our amazing Discord community. ❤️"
-			/>
-		</ul>
+<Layout title="Margaux Mia">
+	<main class="h-full w-full group">
+		<Image src={background_low} quality={'max'} alt="Background universe from Margaux Mia" id="background" class="fixed w-full h-full -z-10 object-cover object-center transition duration-1000 grayscale brightness-75 group-[.active]:grayscale-0 group-[.active]:brightness-100 blur-sm"/>
+
+		<div class="fixed bottom-0 flex flex-col items-center">
+			<button class="py-2 px-8 md:py-3 md:px-16 rounded-full border border-white text-white text-xl md:text-2xl bg-lighter italic transition-opacity duration-1000  group-[.active]:opacity-0" id="launch">
+				*start*
+			</button>
+			<div class="w-full flex flex-col items-center transition-all duration-1000 group-[.active]:mb-8">
+				<Image src={logo} alt="Margaux Mia logo" class="cursor-pointer w-full h-fit object-contain object-center transition-transform origin-bottom duration-1000 md:group-[.active]:scale-25 group-[.active]:scale-75" id="logo"/>
+				<div class="flex flex-col items-center gap-2 md:gap-4 group-[.active]:mt-4 md:group-[.active]:mt-8 max-h-0 group-[.active]:max-h-32 transition-all duration-1000">
+					<a href="https://margauxmia.tunetoo.com/" target="_blank" rel="noopener noreferrer" class="text-white text-xl md:text-2xl italic pointer-events-none group-[.active]:pointer-events-auto">*shop*</a>
+					<a href="https://linktr.ee/margauxmia/" target="_blank" rel="noopener noreferrer" class="text-white text-xl md:text-2xl italic pointer-events-none group-[.active]:pointer-events-auto">*linktree*</a>
+					<button class="mt-2 md:mt-4  pointer-events-none group-[.active]:pointer-events-auto" id="stopSound">
+						<Image src={sound} alt="Sound" class="h-4 w-4 object-contain object-center" />
+						<Image src={no_sound} alt="Sound" class="h-4 w-4 object-contain object-center hidden" />
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="opacity-0 group-[.active]:opacity-100 transition-opacity duration-1000">
+			<Image src={summer} alt="Typo - Souviens-toi l'été dernier" class="fixed top-0 right-0 w-[26rem] max-w-full h-fit object-contain mt-8 px-8" />
+			<Image src={icon} alt="Margaux Mia icon" class="fixed bottom-0 left-0 w-12 h-fit object-contain ml-8 mb-8" />
+			<a href="https://linktr.ee/margauxmia/" target="_blank" rel="noopener noreferrer">
+				<Image src={cover} alt="Song cover" class="fixed bottom-0 right-0 w-16 md:w-32 h-fit object-contain mr-8 mb-8" />
+			</a>
+		</div>
+		<audio src="sounds/background.mp3" autoplay loop preload="auto" id="backgroundAudio"></audio>
+		<audio src="sounds/logo.mp3" preload="auto" id="logoAudio"></audio>
 	</main>
 </Layout>
 
-<style>
-	main {
-		margin: auto;
-		padding: 1.5rem;
-		max-width: 60ch;
-	}
-	h1 {
-		font-size: 3rem;
-		font-weight: 800;
-		margin: 0;
-	}
-	.text-gradient {
-		background-image: var(--accent-gradient);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-size: 400%;
-		background-position: 0%;
-	}
-	.instructions {
-		line-height: 1.6;
-		margin: 1rem 0;
-		border: 1px solid rgba(var(--accent), 25%);
-		background-color: white;
-		padding: 1rem;
-		border-radius: 0.4rem;
-	}
-	.instructions code {
-		font-size: 0.875em;
-		font-weight: bold;
-		background: rgba(var(--accent), 12%);
-		color: rgb(var(--accent));
-		border-radius: 4px;
-		padding: 0.3em 0.45em;
-	}
-	.instructions strong {
-		color: rgb(var(--accent));
-	}
-	.link-card-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-		gap: 1rem;
-		padding: 0;
-	}
-</style>
+<script>
+import background from '../assets/images_compressed/background.jpg';
+
+const main = document.querySelector('main') as HTMLElement;
+const backgroundImage = main.querySelector('#background') as HTMLImageElement;
+const launchButton = main.querySelector('#launch') as HTMLButtonElement;
+const stopButton = main.querySelector('#stopSound') as HTMLButtonElement;
+const stopImages = stopButton.querySelectorAll('img') as NodeListOf<HTMLImageElement>;
+const logo = main.querySelector('#logo') as HTMLImageElement;
+const backgroundAudio = main.querySelector('#backgroundAudio') as HTMLAudioElement;
+const logoAudio = main.querySelector('#logoAudio') as HTMLAudioElement;
+const img = new Image();
+img.src = background.src;
+
+img.addEventListener('load', () => {
+	backgroundImage.src = background.src;
+	backgroundImage.classList.add('!blur-none');
+}, { once: true });
+
+launchButton.addEventListener('click', () => {
+	main.classList.add('active');
+	backgroundAudio.play();
+}, { once: true });
+
+stopButton.addEventListener('click', () => {
+	stopImages.forEach((image) => {
+		image.classList.toggle('hidden');
+	});
+	if (backgroundAudio.paused) {
+        backgroundAudio.play();
+    }else{
+		backgroundAudio.pause();
+        backgroundAudio.currentTime = 0
+    }
+});
+
+logo.addEventListener('click', () => {
+	if (logoAudio.paused) {
+        logoAudio.play();
+    }else{
+        logoAudio.currentTime = 0
+    }
+});
+</script>
